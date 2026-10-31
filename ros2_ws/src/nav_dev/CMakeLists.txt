@@ -32,6 +32,14 @@ ament_auto_add_executable(
 lidar_node src/lidar_node.cpp
 )
 
+install(
+  PROGRAMS
+    scripts/ai_obstacle_avoidance.py
+    scripts/train_ai_policy.py
+    scripts/ai_policy.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 ament_auto_package(
   INSTALL_TO_SHARE
     config

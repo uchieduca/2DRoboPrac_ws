@@ -13,6 +13,7 @@ def generate_launch_description():
     world_name = LaunchConfiguration('world_name', default='nav_slam_world')
     pkg_share_dir = get_package_share_directory('nav_dev')
     model_path = os.path.join(pkg_share_dir, "models")
+    policy_path = os.path.join(model_path, 'avoidance_policy.json')
 
     #ignition gazeboがモデルにアクセスできるように設定
     ign_resource_path = SetEnvironmentVariable(
@@ -76,8 +77,19 @@ def generate_launch_description():
         },{'use_sim_time': use_sim_time}],
         remappings=[
             ("/odom/tf", "tf"),
+            ("/cmd_vel", "/cmd_vel_ai"),
         ],
         output='screen'
+    )
+
+    ai_obstacle_avoidance = Node(
+        package='nav_dev',
+        executable='ai_obstacle_avoidance.py',
+        parameters=[{
+            'model_path': policy_path,
+            'use_sim_time': use_sim_time,
+        }],
+        output='screen',
     )
     
     #ロボットのsdfファイルのパスを取得
@@ -168,6 +180,7 @@ def generate_launch_description():
             description='World name'),
 
         bridge,
+        ai_obstacle_avoidance,
         map_static_tf,
 
         robot_state_publisher,
