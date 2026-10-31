@@ -6,7 +6,7 @@
     <visual>
       <origin xyz="-0.064 0.08 0.06" rpy="0 0 -1.57"/>
       <geometry>
-        <mesh filename="package://nav_dev/models/LidarRobo/meshes/2DRoboPrac.dae"/>
+        <mesh filename="package://nav_dev/models/LidarRobo/meshes/2DRoboPrac.stl"/>
       </geometry>
       <material name="body">
         <color rgba="0.92 0.93 0.94 1"/>
