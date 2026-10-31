@@ -6,7 +6,15 @@ from geometry_msgs.msg import Twist
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
 
-from ai_policy import MAX_ANGULAR, MAX_LINEAR, Policy, apply_safety_guard, make_features, scan_to_sectors
+from ai_policy import (
+    MAX_ANGULAR,
+    MAX_LINEAR,
+    Policy,
+    apply_safety_guard,
+    make_features,
+    obstacle_detour_command,
+    scan_to_sectors,
+)
 
 
 class AiObstacleAvoidance(Node):
@@ -21,6 +29,7 @@ class AiObstacleAvoidance(Node):
         self.command = None
         self.scan_time = 0.0
         self.command_time = 0.0
+        self.detour_direction = 0
 
         self.create_subscription(LaserScan, "/scan", self.scan_callback, 10)
         self.create_subscription(Twist, "/cmd_vel", self.command_callback, 10)
@@ -50,6 +59,14 @@ class AiObstacleAvoidance(Node):
             or now - self.scan_time > 0.5
             or now - self.command_time > 0.5
         ):
+            self.publisher.publish(output)
+            return
+
+        detour, self.detour_direction = obstacle_detour_command(
+            self.sectors, self.detour_direction
+        )
+        if detour is not None:
+            output.linear.x, output.angular.z = detour
             self.publisher.publish(output)
             return
 

@@ -16,6 +16,7 @@ from ai_policy import (  # noqa: E402
     Policy,
     apply_safety_guard,
     make_features,
+    obstacle_detour_command,
     scan_to_sectors,
     teacher_action,
 )
@@ -72,6 +73,30 @@ class AiPolicyTest(unittest.TestCase):
 
         self.assertAlmostEqual(teacher_action(clear)[0], 1.0)
         self.assertLess(teacher_action(blocked)[0], 0.1)
+
+    def test_detour_starts_toward_clear_side_when_front_is_blocked(self):
+        sectors = [1.0] * SECTOR_COUNT
+        sectors[8:10] = [0.1, 0.1]
+        sectors[4:8] = [0.2] * 4
+
+        command, direction = obstacle_detour_command(sectors, 0)
+
+        self.assertEqual(direction, 1)
+        self.assertIsNotNone(command)
+        self.assertGreater(command[0], 0.0)
+        self.assertGreater(command[1], 0.0)
+
+    def test_detour_stops_close_and_releases_after_obstacle_is_passed(self):
+        sectors = [1.0] * SECTOR_COUNT
+        sectors[8] = 0.05
+
+        command, direction = obstacle_detour_command(sectors, 1)
+        self.assertEqual(command[0], 0.0)
+        self.assertGreater(command[1], 0.0)
+
+        command, direction = obstacle_detour_command([1.0] * SECTOR_COUNT, direction)
+        self.assertIsNone(command)
+        self.assertEqual(direction, 0)
 
     def test_trained_policy_slows_and_stops_for_close_obstacles(self):
         model_path = pathlib.Path(__file__).parents[1] / "models" / "avoidance_policy.json"

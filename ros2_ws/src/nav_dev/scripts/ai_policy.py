@@ -54,6 +54,24 @@ def teacher_action(features):
     return [min(1.0, max(-1.0, linear)), min(1.0, max(-1.0, angular))]
 
 
+def obstacle_detour_command(sectors, direction):
+    front = min(sectors[6:12]) * MAX_RANGE
+    left = min(sectors[10:14]) * MAX_RANGE
+    right = min(sectors[4:8]) * MAX_RANGE
+
+    if direction == 0:
+        if front >= 0.65:
+            return None, 0
+        direction = 1 if left >= right else -1
+
+    passing_side = right if direction > 0 else left
+    if front >= 0.9 and passing_side >= 0.65:
+        return None, 0
+
+    linear = 0.0 if front <= 0.35 else 0.18
+    return (linear, direction * 0.65), direction
+
+
 def apply_safety_guard(features, linear, angular):
     sectors = features[:SECTOR_COUNT]
     front = min(sectors[6:12]) * MAX_RANGE
