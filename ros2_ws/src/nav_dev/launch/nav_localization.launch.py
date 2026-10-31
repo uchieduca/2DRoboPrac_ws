@@ -6,7 +6,6 @@ from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
-import xacro
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
@@ -79,21 +78,12 @@ def generate_launch_description():
         output='screen'
     )
 
-    #mapトピックの設定
-    map_static_tf = Node(package='tf2_ros',
-                        executable='static_transform_publisher',
-                        name='static_transform_publisher',
-                        output='log',
-                        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0', 'map', 'odom'])
-    
-    #ロボットのsdfファイルのパスを取得
-    sdf = os.path.join(
+    #RViz表示用URDFを読み込む
+    urdf = os.path.join(
         get_package_share_directory('nav_dev'),
-        'models', 'LidarRobo4', 'model.sdf')
-
-    #xacroでsdfファイルをurdfに変換
-    doc = xacro.parse(open(sdf))
-    xacro.process_doc(doc)
+        'models', 'LidarRobo', 'robot.urdf')
+    with open(urdf, encoding='utf-8') as urdf_file:
+        robot_description = urdf_file.read()
 
     #robot_state_publsherの起動設定
     robot_state_publisher = Node(
@@ -102,7 +92,7 @@ def generate_launch_description():
             name='robot_state_publisher',
             output='both',
             parameters=[{'use_sim_time': use_sim_time,
-                         'robot_description': doc.toxml()}]) # type: ignore
+                         'robot_description': robot_description}])
     
     teleop_node = Node(
                 package='nav_dev',
@@ -164,7 +154,6 @@ def generate_launch_description():
             description='World name'),
 
         bridge,
-        map_static_tf,
 
         robot_state_publisher,
 

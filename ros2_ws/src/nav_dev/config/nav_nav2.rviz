@@ -80,17 +80,21 @@ Visualization Manager:
         All Enabled: false
         base_footprint:
           Value: true
-        chassis:
+        base_link:
           Value: true
-        left_wheel:
+        base_scan:
           Value: true
-        lidar:
+        caster_back_left_link:
+          Value: true
+        caster_back_right_link:
           Value: true
         map:
           Value: true
         odom:
           Value: true
-        right_wheel:
+        wheel_left_link:
+          Value: true
+        wheel_right_link:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -101,12 +105,16 @@ Visualization Manager:
         map:
           odom:
             base_footprint:
-              chassis:
-                left_wheel:
+              base_link:
+                base_scan:
                   {}
-                lidar:
+                caster_back_left_link:
                   {}
-                right_wheel:
+                caster_back_right_link:
+                  {}
+                wheel_left_link:
+                  {}
+                wheel_right_link:
                   {}
       Update Interval: 0
       Value: true

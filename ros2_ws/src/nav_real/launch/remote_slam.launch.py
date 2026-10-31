@@ -6,7 +6,6 @@ from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
-import xacro
 
 def generate_launch_description():
     nav_dev_dir = get_package_share_directory('nav_dev')
@@ -48,14 +47,12 @@ def generate_launch_description():
                 )
 
     
-    #ロボットのsdfファイルのパスを取得
-    sdf = os.path.join(
+    #RViz表示用URDFを読み込む
+    urdf = os.path.join(
         get_package_share_directory('nav_dev'),
-        'models', 'LidarRobo', 'model.sdf')
-
-    #xacroでsdfファイルをurdfに変換
-    doc = xacro.parse(open(sdf))
-    xacro.process_doc(doc)
+        'models', 'LidarRobo', 'robot.urdf')
+    with open(urdf, encoding='utf-8') as urdf_file:
+        robot_description = urdf_file.read()
     
     #robot_state_publsherの起動設定
     robot_state_publisher = Node(
@@ -63,7 +60,7 @@ def generate_launch_description():
             executable='robot_state_publisher',
             name='robot_state_publisher',
             output='both',
-            parameters=[{'robot_description': doc.toxml()}]) # type: ignore
+            parameters=[{'robot_description': robot_description}])
      
     #rviz2の設定フィルのパスを取得
     rviz_config_dir = os.path.join(

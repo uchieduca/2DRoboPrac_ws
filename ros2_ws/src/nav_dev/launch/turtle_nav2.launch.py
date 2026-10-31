@@ -78,13 +78,6 @@ def generate_launch_description():
         output='screen'
     )
 
-    #mapトピックの設定
-    map_static_tf = Node(package='tf2_ros',
-                        executable='static_transform_publisher',
-                        name='static_transform_publisher',
-                        output='log',
-                        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0', 'map', 'odom'])
-    
     #ロボットのsdfファイルのパスを取得
     sdf = os.path.join(
         get_package_share_directory('nav_dev'),
@@ -164,7 +157,6 @@ def generate_launch_description():
             description='World name'),
 
         bridge,
-        map_static_tf,
 
         robot_state_publisher,
 
