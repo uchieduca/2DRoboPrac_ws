@@ -41,7 +41,7 @@ class AiPolicyTest(unittest.TestCase):
         weights_in = [[0.0] * INPUT_SIZE for _ in range(HIDDEN_SIZE)]
         weights_out = [[0.0] * HIDDEN_SIZE for _ in range(2)]
         bias_hidden = [0.0] * HIDDEN_SIZE
-        bias_out = [math.atanh(0.5), math.atanh(-0.25)]
+        bias_out = [math.atanh(0.13 / MAX_LINEAR), math.atanh(-0.25)]
         policy = Policy(weights_in, bias_hidden, weights_out, bias_out)
         features = make_features([1.0] * SECTOR_COUNT, 0.13, -0.25)
 
@@ -57,18 +57,18 @@ class AiPolicyTest(unittest.TestCase):
         sectors = [1.0] * SECTOR_COUNT
         sectors[8] = 0.05
         sectors[10] = 0.2
-        features = make_features(sectors, 0.26, 0.0)
+        features = make_features(sectors, MAX_LINEAR, 0.0)
 
-        linear, angular = apply_safety_guard(features, 0.26, 0.0)
+        linear, angular = apply_safety_guard(features, MAX_LINEAR, 0.0)
 
         self.assertEqual(linear, 0.0)
         self.assertLess(angular, 0.0)
 
     def test_teacher_slows_for_obstacle_and_preserves_clear_path(self):
-        clear = make_features([1.0] * SECTOR_COUNT, 0.26, 0.0)
+        clear = make_features([1.0] * SECTOR_COUNT, MAX_LINEAR, 0.0)
         blocked_sectors = [1.0] * SECTOR_COUNT
         blocked_sectors[8:10] = [0.05, 0.05]
-        blocked = make_features(blocked_sectors, 0.26, 0.0)
+        blocked = make_features(blocked_sectors, MAX_LINEAR, 0.0)
 
         self.assertAlmostEqual(teacher_action(clear)[0], 1.0)
         self.assertLess(teacher_action(blocked)[0], 0.1)
@@ -76,26 +76,26 @@ class AiPolicyTest(unittest.TestCase):
     def test_trained_policy_slows_and_stops_for_close_obstacles(self):
         model_path = pathlib.Path(__file__).parents[1] / "models" / "avoidance_policy.json"
         policy = Policy.load(model_path)
-        clear_features = make_features([1.0] * SECTOR_COUNT, 0.26, 0.0)
+        clear_features = make_features([1.0] * SECTOR_COUNT, MAX_LINEAR, 0.0)
         clear_action = policy.predict(clear_features)
         clear_speed, _ = apply_safety_guard(
-            clear_features, clear_action[0] * 0.26, clear_action[1]
+            clear_features, clear_action[0] * MAX_LINEAR, clear_action[1]
         )
 
         near_sectors = [1.0] * SECTOR_COUNT
         near_sectors[8:10] = [0.1, 0.1]
-        near_features = make_features(near_sectors, 0.26, 0.0)
+        near_features = make_features(near_sectors, MAX_LINEAR, 0.0)
         near_action = policy.predict(near_features)
         near_speed, _ = apply_safety_guard(
-            near_features, near_action[0] * 0.26, near_action[1]
+            near_features, near_action[0] * MAX_LINEAR, near_action[1]
         )
 
         emergency_sectors = [1.0] * SECTOR_COUNT
         emergency_sectors[8:10] = [0.05, 0.05]
-        emergency_features = make_features(emergency_sectors, 0.26, 0.0)
+        emergency_features = make_features(emergency_sectors, MAX_LINEAR, 0.0)
         emergency_action = policy.predict(emergency_features)
         emergency_speed, _ = apply_safety_guard(
-            emergency_features, emergency_action[0] * 0.26, emergency_action[1]
+            emergency_features, emergency_action[0] * MAX_LINEAR, emergency_action[1]
         )
 
         self.assertGreater(clear_speed, 0.1)
