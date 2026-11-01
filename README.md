@@ -7,6 +7,7 @@ https://qiita.com/N622/items/6ca879f8b1f9d667e561
 # Ubuntu のターミネーター用のコード
 
 １．初回起動時
+```bash
 cd /workspaces/2DRoboPrac_ws
 source /opt/ros/humble/setup.bash
 
@@ -14,7 +15,7 @@ cd ros2_ws
 rosdep install --from-paths src --ignore-src -r -y
 colcon build --symlink-install
 source install/setup.bash
-
+```
 
 2. 初回にROS 2のシミュレーションを起動
 ros2 launch nav_dev nav_teleop.launch.py
