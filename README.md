@@ -16,7 +16,7 @@ colcon build --symlink-install
 source install/setup.bash
 
 
-初回にROS 2のシミュレーションを起動
+2. 初回にROS 2のシミュレーションを起動
 ros2 launch nav_dev nav_teleop.launch.py
 
 3. AI障害物回避付きのシミュレーションを起動
