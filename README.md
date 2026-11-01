@@ -1,10 +1,11 @@
 # About
 
-下記内容を踏まえて、最終課題用に編集を行いました。
+下記サイトの内容とフォーク元のコードをもとに、PAI最終課題用に編集を行いました。
 
 This is a repositry for developing 2D auto drive robot.
 Description is in following article.
 https://qiita.com/N622/items/6ca879f8b1f9d667e561
+
 
 ## 実行環境
 
