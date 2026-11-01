@@ -1,8 +1,10 @@
-# 2DRoboPrac
+# About
 
-2D自動走行ロボットの開発リポジトリです。ROS 2による制御やGazeboシミュレーションなど、開発に使用するソースコードと関連ファイルを管理しています。
+下記内容を踏まえて、最終課題用に編集を行いました。
 
-プロジェクトの概要は[Qiitaの記事](https://qiita.com/N622/items/6ca879f8b1f9d667e561)を参照してください。
+This is a repositry for developing 2D auto drive robot.
+Description is in following article.
+https://qiita.com/N622/items/6ca879f8b1f9d667e561
 
 ## 実行環境
 
