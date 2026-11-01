@@ -1,19 +1,21 @@
-# About
+# 2DRoboPrac
 
-下記サイトの内容とフォーク元のコードをもとに、PAI最終課題用に編集を行いました。
+本リポジトリは、2D自動走行ロボットの開発を目的としています。フォーク元のコードと以下の記事を参考に、PAI最終課題向けに編集しました。
 
-＜参照元＞  
-This is a repositry for developing 2D auto drive robot.
-Description is in following article.
-https://qiita.com/N622/items/6ca879f8b1f9d667e561
-
-
+- 参考記事: [Qiita記事](https://qiita.com/N622/items/6ca879f8b1f9d667e561)
 
 ## 実行環境
 
 - Ubuntu
 - ROS 2 Humble
 - ROS 2ワークスペース: `ros2_ws`
+
+UbuntuにROS 2 Humbleがインストールされていることを前提とします。初めて `rosdep` を使う環境では、依存関係をインストールする前に一度だけ初期化してください。すでに初期化済みの場合は、この手順を省略できます。
+
+```bash
+sudo rosdep init
+rosdep update
+```
 
 以下のコマンド例では、リポジトリを `/workspaces/2DRoboPrac_ws` に配置しているものとします。
 
@@ -52,7 +54,9 @@ ros2 launch nav_dev nav_teleop.launch.py
 ros2 launch nav_dev nav_nav2.launch.py
 ```
 
-### オムニホイール制御
+### オムニホイールのジョイスティック操作
+
+このlaunchでは、ジョイスティック入力からオムニホイール用の制御指令を生成し、状態表示を起動します。実機用の `omni_hardware_node` は起動しません。
 
 ```bash
 ros2 launch omni_control omni_teleop.launch.py
