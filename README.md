@@ -13,6 +13,7 @@
 UbuntuにROS 2 Humbleがインストールされていることを前提とします。初めて `rosdep` を使う環境では、依存関係をインストールする前に一度だけ初期化してください。すでに初期化済みの場合は、この手順を省略できます。
 
 ```bash
+sudo apt install python3-rosdep
 sudo rosdep init
 rosdep update
 ```
