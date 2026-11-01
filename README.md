@@ -6,11 +6,13 @@
 
 ## 実行環境
 
-- Ubuntu
+- Ubuntu 22.04 LTS (Jammy)
 - ROS 2 Humble
 - ROS 2ワークスペース: `ros2_ws`
 
-UbuntuにROS 2 Humbleがインストールされていることを前提とします。初めて `rosdep` を使う環境では、依存関係をインストールする前に一度だけ初期化してください。すでに初期化済みの場合は、この手順を省略できます。
+この手順は、Ubuntu 22.04 LTS (Jammy)にROS 2 Humbleをaptでインストールした環境を前提とします。Ubuntu 24.04では、以下の `ros-humble-*` パッケージを記載どおりにaptでインストールできないため、Jammy環境で実行してください。
+
+初めて `rosdep` を使う環境では、依存関係をインストールする前に一度だけ初期化してください。すでに初期化済みの場合は、この手順を省略できます。
 
 ```bash
 sudo apt install python3-rosdep
