@@ -19,11 +19,12 @@ https://qiita.com/N622/items/6ca879f8b1f9d667e561
 
 ## 初回セットアップ
 
-依存パッケージをインストールし、ワークスペースをビルドします。
+Nav2・RViz・ジョイスティック制御など、launchファイルで使用するROSパッケージをインストールしてから、依存関係を解決し、ワークスペースをビルドします。
 
 ```bash
 cd /workspaces/2DRoboPrac_ws
 source /opt/ros/humble/setup.bash
+sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup ros-humble-rviz2 ros-humble-joy xterm
 cd ros2_ws
 rosdep install --from-paths src --ignore-src -r -y
 colcon build --symlink-install
@@ -64,6 +65,6 @@ ros2 launch omni_control omni_teleop.launch.py
 ```bash
 cd /workspaces/2DRoboPrac_ws/ros2_ws
 source /opt/ros/humble/setup.bash
-colcon build --symlink-install --packages-select nav_dev omni_control
+colcon build --symlink-install --packages-up-to nav_dev omni_control
 source install/setup.bash
 ```
